@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './todo.css';
 
-const API_URL = 'http://localhost:3000/api/todos';
+// const API_URL = 'http://localhost:3000/api/todos';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Todo = () => {
   const [input, setInput] = useState("");
