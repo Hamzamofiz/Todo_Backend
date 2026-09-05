@@ -9,7 +9,11 @@ const Todo = require('./modules/todo')
 
 
 // mongoDB Databse connection
-connectdb();
+if (!process.env.MONGO_URL) {
+  console.error('MONGO_URL is not defined in environment variables');
+} else {
+  connectdb();
+}
 
 
 const app = express();
@@ -72,7 +76,15 @@ app.delete('/api/todos/:id', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: err.message || 'Internal Server Error' });
+});
 
-})
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => console.log(`Server running on port ${port}`));
+}
+
+module.exports = app;
